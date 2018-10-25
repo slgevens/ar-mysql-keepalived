@@ -21,7 +21,7 @@
     src=keepalived.conf.j2
     dest={{ keepalived_cfg }}
     owner=0 group=0 mode=0640
-  notify: restart keepalived
+  register: keepalived_out
   tags: cfg
 
 - name: Only enable VRRP
@@ -30,7 +30,7 @@
               regexp=^DAEMON_ARGS=
               line=DAEMON_ARGS="{{ keepalived_svc_flags }}"
   when: ansible_os_family == 'Debian'
-  notify: restart keepalived
+  register: enable_out
   tags: cfg
 
 - name: Allow binding to a non-local IP
@@ -56,3 +56,7 @@
     name: "{{ keepalived_svc }}"
     enabled: yes
   tags: svc
+
+- name: restart keepalived
+  service: name={{ keepalived_svc }} state=restarted
+  when: keepalived_out.changed or enable_out.changed
