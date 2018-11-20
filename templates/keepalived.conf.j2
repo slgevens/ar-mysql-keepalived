@@ -2,8 +2,8 @@
 
 global_defs {
   notification_email {
-{% for notification_email in keepalived_notification_email %}
-    {{ notification_email }}
+{% for x in keepalived_notification_email %}
+    {{ x.notification_email }}
 {% endfor %}
   }
   notification_email_from {{ keepalived_notification_email_from }}
@@ -47,8 +47,8 @@ vrrp_instance {{ key }} {
     auth_pass {{ value.authentication.auth_pass }}
   }
   virtual_ipaddress {
-{% for virtual_ipaddress in value.virtual_ipaddresses %}
-    {{ virtual_ipaddress }}
+{% for v in value.virtual_ipaddresses %}
+    {{ v.virtual_ipaddress }}
 {% endfor %}
   }
 {% if value.nopreempt is defined and value.nopreempt | bool %}
@@ -58,8 +58,8 @@ vrrp_instance {{ key }} {
   preempt_delay {{ value.preempt_delay }}
 {% endif %}
   track_script {
-{% for track_script in value.track_scripts %}
-    {{ track_script }}
+{% for t in value.track_scripts %}
+    {{ t.track_script }}
 {% endfor %}
   }
 {% if value.notify is defined %}
